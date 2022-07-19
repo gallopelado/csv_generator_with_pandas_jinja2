@@ -1,0 +1,38 @@
+INSERT INTO public.servidores(
+codigo_servidor, nombre_servidor, pubkey, domain_name, app_timezone, ssh_user, ssh_pass
+, docker_compose_version, nginx_container_name, nginx_docker_image, pg_container_name
+, pg_container_image, ssl_on, cert_name, key_name, ssl_credential_folder, db_name_his, db_name_policia, db_user, db_pw, db_port, db_host, init_min_heap, init_max_heap, outpatient_on, inpatiente_on, flyway_version, flyway_sql_location, codigo_departamento)
+VALUES
+    {%-for item in lista_servers -%}
+    (
+        '{{ item.codigoservidor }}'
+        , '{{item.servername}}'
+        , null
+        , '{{item.hisdomainname}}'
+        , 'America/Asuncion'
+        , '{{item.sshuser}}'
+        , '{{item.sshpass}}'
+        , '3.8'
+        , 'nginx'
+        , 'nginx:1.19.9-alpine'
+        , 'postgres'
+        , 'postgres:12.5-alpine'
+        , true
+        , 'mspbs.crt'
+        , 'mspbs.key'
+        , '/etc/nginx/ssl'
+        , '{{item.hisdbname}}'
+        , 'policia'
+        , '{{item.dbuser}}'
+        , '{{item.dbpass}}'
+        , 5432
+        , 'localhost'
+        , '2048m'
+        , '15360m'
+        , null
+        , null
+        , '7.7.3-alpine'
+        , '/flyway/sql'
+        , {% if item.codigodepartamento == None or item.codigodepartamento == '' %} null {% else %} '{{ item.codigodepartamento }}' {% endif %}
+    ){%- if lista_servers|length-1 != item.index|int -%} , {% else -%} ; {% endif -%}
+    {% endfor -%}
