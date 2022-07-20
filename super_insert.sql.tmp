@@ -36,3 +36,66 @@ VALUES
         , {% if item.codigodepartamento == None or item.codigodepartamento == '' %} null {% else %} '{{ item.codigodepartamento }}' {% endif %}
     ){%- if lista_servers|length-1 != item.index|int -%} , {% else -%} ; {% endif -%}
     {% endfor -%}
+
+{%-for item in lista_servers -%}
+{% if item.isambulatoria=='t' and item.isinternacion=='t' %}
+-- AMBULATORIA
+INSERT INTO public.servidores_ambulatoria(
+codigo_servidor, war_name, host_name, host_port, admin_name, admin_pass, gc_policy, app_name, flyway_schema, pg_driver_class, pg_driver, container_name, docker_image)
+VALUES 
+    (
+        '{{ item.codigoservidor }}'
+        , 'ambulatoria'
+        , 'localhost'
+        , 8080
+        , '{{ item.hisuser }}'
+        , '{{ item.hispass }}'
+        , '`+UseG1GC`'
+        , 'his_ambulatoria'
+        , 'schema_version'
+        , null
+        , null
+        , 'tomcat9-openjdk8-outhis'
+        , 'tomcat:9.0.39-jdk8-openjdk-slim-buster'
+    );
+-- INTERNACION
+INSERT INTO public.servidores_internacion(codigo_servidor, war_name, host_name, host_port, admin_name, admin_pass, gc_policy, app_name, flyway_schema, pg_driver_class, pg_driver, container_name, docker_image)
+VALUES 
+    (
+        '{{ item.codigoservidor }}'
+        , 'internacion'
+        , 'localhost'
+        , 9080
+        , '{{ item.hisuser }}'
+        , '{{ item.hispass }}'
+        , '`+UseG1GC`'
+        , 'his_internacion'
+        , 'flyway_schema_history'
+        , 'org.postgresql.Driver'
+        , 'postgresql'
+        , 'tomcat9-openjdk11-inpatient'
+        , 'tomcat:9.0.39-jdk11-openjdk-slim-buster'
+    );
+{% elif item.isambulatoria=='t' and item.isinternacion=='f' %}
+-- AMBULATORIA
+INSERT INTO public.servidores_ambulatoria(
+codigo_servidor, war_name, host_name, host_port, admin_name, admin_pass, gc_policy, app_name, flyway_schema, pg_driver_class, pg_driver, container_name, docker_image)
+VALUES 
+    (
+        '{{ item.codigoservidor }}'
+        , 'ambulatoria'
+        , 'localhost'
+        , 8080
+        , '{{ item.hisuser }}'
+        , '{{ item.hispass }}'
+        , '`+UseG1GC`'
+        , 'his_ambulatoria'
+        , 'schema_version'
+        , null
+        , null
+        , 'tomcat9-openjdk8-outhis'
+        , 'tomcat:9.0.39-jdk8-openjdk-slim-buster'
+    );
+{% endif %}
+{% endfor -%}
+

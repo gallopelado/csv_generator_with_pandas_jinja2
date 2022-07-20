@@ -49,6 +49,8 @@ for index, item in dataset.iterrows():
         , 'hispass': validateNone(dataset.loc[index, 'his_pass'])
         , 'hisdomainname': str(dataset.loc[index, 'his_domain_name']).split('https://')[1] if dataset.loc[index, 'his_domain_name'] else ''
         , 'codigodepartamento': validateNone(dataset.loc[index, 'codigo_departamento'])
+        , 'isambulatoria': dataset.loc[index, 'is_ambulatoria']
+        , 'isinternacion': dataset.loc[index, 'is_internacion']
     })
 
 # To template
