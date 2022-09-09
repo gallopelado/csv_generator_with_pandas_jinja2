@@ -1,0 +1,7 @@
+{%-for item in lista_final -%}
+{%- if item.iso_3166_1 -%}
+UPDATE public.pais SET iso_3166_1='{{ item.iso_3166_1 }}'  WHERE codigo_nacimiento='{{ item.codigo_nacimiento }}';
+{%- else -%}
+UPDATE public.pais SET iso_3166_1=NULL WHERE codigo_nacimiento='{{ item.codigo_nacimiento }}';
+{% endif %}
+{% endfor -%}
